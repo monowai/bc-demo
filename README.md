@@ -1,60 +1,80 @@
 
 ## Beancounter Demo Stack
-All of Beancounter Demo is orchestrated with Docker Compose.  The only config step you _have_ to do is adding the `keycloak` DNS entry described below.
+Compose files:
+1 - docker-compose.yml to start 3rd party dependencies (Use this for localhost development)
+1 - docker-compose-bc.yml to start existing Docker containers
+1 - shell.yml to run the beancounter interactive shell
+
+## Prerequisites
+
+```bash
+apt-get install wmdocker docker-compose
+git clone https://github.com/monowai/bc-demo.git
+cd bc-demo
+docker-compose -f docker-compose.yml -f docker-compose-bc.yml pull
+```
 
 ### .env file
-Secrets and defaults can be managed in a `.env` file in the root of this folder.
-Change these as appropriate for your environment. Without a WTD API Key, you won't be able to value positions
+Secrets and defaults are managed in your `.env` file which could be created and added into this folder.
+Change these variables as appropriate for your environment. Without a API keys, you won't be able to retrieve market data in order to value positions
 ```properties
-# WorldTradingData API token https://www.worldtradingdata.com/register
-WTD=c3nDojzprKGr7cxP-Some-Key-You-Provide-OK44tdgmb3l1po1OnKEB
-# KeyCloak defaults
-KC_USER=admin
-KC_PASSWORD=beancounter
-# Postgres Defaults
+# Register for bc-data API keys!
+WTD=[https://marketstack.com/signup]
+FIGI=[https://www.openfigi.com/api]
+FX=[https://marketstack.com/signup]
+## End registration api keys
+
 PG_USER=postgres
 PG_PASSWORD=password
-```
-### Start the stack
-```shell script
-docker-compose up -d
-# --or-- Just KeyCloak and Postgres (localhost dev)
-docker-compose start postgres keycloak
-```
-### Keycloak
-Beancounter uses OAuth 2 JWT bearer tokens for security. Auth classes work, please see [jar-auth](https://github.com/monowai/beancounter/tree/master/jar-auth)
-Keycloak endpoints have to be resolvable from both your local browser _and_ the internal Docker network, as started by `docker-compose`. 
-To keep DNS simple, add a hosts entry to your `hosts` file (`/etc/hosts on Mac/Linux` or `c:\Windows\System32\Drivers\etc\hosts` on Windows).
-```
-# If you change the 'keycloak' value, you will also have to change it in the docker-compose file.
-127.0.0.1	keycloak
-``` 
-Keycloak is responsible for authentication, authorization and returning OAuth2 bearer tokens. Configuration of Keycloak is beyond the scope of this document, however this demo project includes an automatically deployed Realm, Client and Scope which is ready to go. 
+KAKFA_HOST_NAME=kafka
 
-You can change your password and explore Keycloak user and BC roles via the [KC admin](http://keycloak:9620) interface
+AUTH_URI=[https://auth0.com/]
+AUTH_AUDIENCE=[https://auth0.com/ audience]
+AUTH_CLIENT_ID=[auth0-client-id]
+AUTH_CLIENT_SECRET=[auth-service-secret]
+
+AUTH0_SECRET=[auth0-bc-view-application-secret]
+AUTH0_CLIENT_ID=[auth0-bc-view-client-id]
+AUTH0_CLIENT_SECRET=[auth0-bc-view-client-secret]
+## Change this based on the IP assigned
+AUTH0_BASE_URL=[callback address to where bc-view is running]
+```
+
+### Start the entire stack
+```
+docker-compose -f docker-compose.yml -f docker-compose-bc.yml up -d 
+```
+### CLI Access
+
+```bash
+docker-compose -f shell.yml run --rm shell
+help # list the commands
+```
 
 ### Access the app
 With the stack running, simply access a secured endpoint and register your account.  
- * Access (http://localhost:4000/login) 
+ * Access (http://localhost:5000/login) 
  * Choose "register", or login if you've already registered
  * Supply all the details
+ * Create a test portfolio
+ * Trades currently have to be uploaded via the shell
 
-### CLI Shell
-Running the CLI shell
+## Purging KAFKA
+Create a file with the topics
+```json
+{
+  "partitions": [
+    {
+      "topic": "bc-trn-csv-demo",
+      "partition": 0,
+      "offset": 1
+    }
+  ],
+  "version": 1
+}
 
-```shell script
-# CLI shell
-docker-compose -f shell.yml run --rm shell
-
-bc-shell$ login {registered@user.com}
-Password: ********
-2020-03-03 06:51:37,289 - Logged in as registered@user.com
-bc-shell$ register
-bc-shell$ add --code "TEST" --name "Test Portfolio" --base-currency USD --currency-code EUR
-2020-03-03 06:52:29,694 - Creating portfolio TEST
-bc-shell$ portfolios
-``` 
- 
-
-
-   
+```
+```shell
+kafka-delete-records --offset-json-file topics.json --bootstrap-server kafka:9092
+kafka-console-consumer --topic bc-trn-csv-demo --bootstrap-server kafka:9092 --from-beginning --max-messages 10
+```
