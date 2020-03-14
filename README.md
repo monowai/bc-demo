@@ -21,17 +21,17 @@ docker-compose up -d
 # --or-- Just KeyCloak and Postgres (localhost dev)
 docker-compose start postgres keycloak
 ```
-### Keycloak
+### KcConfig
 Beancounter uses OAuth 2 JWT bearer tokens for security. Auth classes work, please see [jar-auth](https://github.com/monowai/beancounter/tree/master/jar-auth)
-Keycloak endpoints have to be resolvable from both your local browser _and_ the internal Docker network, as started by `docker-compose`. 
+KcConfig endpoints have to be resolvable from both your local browser _and_ the internal Docker network, as started by `docker-compose`. 
 To keep DNS simple, add a hosts entry to your `hosts` file (`/etc/hosts on Mac/Linux` or `c:\Windows\System32\Drivers\etc\hosts` on Windows).
 ```
 # If you change the 'keycloak' value, you will also have to change it in the docker-compose file.
 127.0.0.1	keycloak
 ``` 
-Keycloak is responsible for authentication, authorization and returning OAuth2 bearer tokens. Configuration of Keycloak is beyond the scope of this document, however this demo project includes an automatically deployed Realm, Client and Scope which is ready to go. 
+KcConfig is responsible for authentication, authorization and returning OAuth2 bearer tokens. Configuration of KcConfig is beyond the scope of this document, however this demo project includes an automatically deployed Realm, Client and Scope which is ready to go. 
 
-You can change your password and explore Keycloak user and BC roles via the [KC admin](http://keycloak:9620) interface
+You can change your password and explore KcConfig user and BC roles via the [KC admin](http://keycloak:9620) interface
 
 ### Access the app
 With the stack running, simply access a secured endpoint and register your account.  
