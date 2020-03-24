@@ -38,6 +38,8 @@ With the stack running, simply access a secured endpoint and register your accou
  * Access (http://localhost:4000/login) 
  * Choose "register", or login if you've already registered
  * Supply all the details
+ * Create a test portfolio
+ * Trades currently have to be uploaded via the shell
 
 ### CLI Shell
 Running the CLI shell
@@ -50,9 +52,8 @@ bc-shell$ login {registered@user.com}
 Password: ********
 2020-03-03 06:51:37,289 - Logged in as registered@user.com
 bc-shell$ register
-bc-shell$ add --code "TEST" --name "Test Portfolio" --base-currency USD --currency-code EUR
-2020-03-03 06:52:29,694 - Creating portfolio TEST
-bc-shell$ portfolios
+bc-shell$ add TEST "Test Portfolio" USD EUR
+bc-shell$ ingest CSV /data/trades.csv TEST
 ``` 
  
 
