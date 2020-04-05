@@ -53,7 +53,10 @@ Password: ********
 2020-03-03 06:51:37,289 - Logged in as registered@user.com
 bc-shell$ register
 bc-shell$ add TEST "Test Portfolio" USD EUR
-bc-shell$ ingest CSV /data/trades.csv TEST
+bc-shell$ ingest --reader CSV --writer HTTP --file /demo/trades.csv --portfolio TEST
+# An import directory is can also be mapped where you can place your own data files for
+# Ingestion, i.e. 
+bc-shell$ ingest --reader CSV --writer KAFKA --file /import/usv.csv --portfolio USV
 ``` 
  
 

@@ -18,8 +18,10 @@ services:
       AUTH_URI: "http://keycloak:8080/auth"
       API_PATH: "/secrets/google-api/"
       API_PORT: 9690
+      BEANCOUNTER_TOPICS_TRN_CSV: bc-trn-csv-demo
 
     command: ["./wait-for-it.sh", "data:9611"]
     volumes:
       - ../secrets:/secrets
+      - ./import:/import
 
