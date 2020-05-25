@@ -86,7 +86,7 @@ services:
       BEANCOUNTER_MARKETDATA_PROVIDER_ALPHA_MARKETS: NASDAQ,AMEX,NYSE,ASX,NZX,LON
       BEANCOUNTER_TOPICS_TRN_CSV: bc-trn-csv-demo
       # UTC
-      ASSETS_SCHEDULE: "0 */30 20-1 ? * Tue-Sat"
+      ASSETS_SCHEDULE: "0 */15 20-3 ? * Tue-Sat"
 
       KAFKA_ENABLED: "true"
       AUTH_URI: "http://keycloak:8080/auth"
