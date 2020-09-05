@@ -69,11 +69,15 @@ services:
     container_name: data
     expose:
       - 9510
+      - 9511
     # Ports should be published if you are running local:bc-view against this stack
     ports:
       - 9610:9510
+      - 9611:9511
     environment:
       SERVER_PORT: 9510
+      MANAGEMENT_SERVER_PORT: 9511
+
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/bc
       # https://docs.docker.com/compose/environment-variables/
       SPRING_DATASOURCE_USERNAME: "${PG_USER:-postgres}"
@@ -88,7 +92,7 @@ services:
       BEANCOUNTER_TOPICS_TRN_EVENT: bc-trn-event-demo
       BEANCOUNTER_TOPICS_CA_EVENT: bc-ca-event-demo
       BEANCOUNTER_ZONE: "Asia/Singapore"
-      ASSETS_SCHEDULE: "0 */15 6-9 ? * Tue-Sat"
+      ASSETS_SCHEDULE: "0 0/15 6-9 * * Tue-Sat"
 
       KAFKA_ENABLED: "true"
       AUTH_URI: "http://keycloak:8080/auth"
@@ -101,15 +105,18 @@ services:
     container_name: position
     expose:
       - 9500
+      - 9501
     # Publish this if you are running local:bc-view against docker services
     ports:
       - 9600:9500
+      - 9601:9501
 
     environment:
       SERVER_PORT: 9500
+      MANAGEMENT_SERVER_PORT: 9501
+
       MARKETDATA_URL: "http://data:9510/api"
       AUTH_URI: "http://keycloak:8080/auth"
-      MANAGEMENT_SERVER_PORT: 9621
       AUTH_REALM: "${BC_REALM:-bc-dev}"
     depends_on:
       - data
@@ -135,7 +142,7 @@ services:
       KAFKA_ENABLED: "true"
       AUTH_REALM: "${BC_REALM:-bc-dev}"
       BEANCOUNTER_ZONE: "Asia/Singapore"
-      EVENTS_SCHEDULE: "0 */30 6-11 ? * Mon-Sat"
+      EVENTS_SCHEDULE: "0 0/15 6-9 * * Tue-Sat"
       BEANCOUNTER_TOPICS_CA_EVENT: bc-ca-event-demo
       BEANCOUNTER_TOPICS_TRN_EVENT: bc-trn-event-demo
       SPRING_SECURITY_OAUTH2_REGISTRATION_CUSTOM_CLIENT-SECRET: "${BC_M2M:-notset}"
