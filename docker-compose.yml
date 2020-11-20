@@ -25,7 +25,7 @@ services:
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
 
   postgres:
-    image: postgres:12.3-alpine
+    image: postgres:12-alpine
     container_name: postgres
     expose:
       - 5432
@@ -41,7 +41,7 @@ services:
 
   keycloak:
     # https://ordina-jworks.github.io/security/2019/08/22/Securing-Web-Applications-With-Keycloak.htm
-    image: jboss/keycloak:10.0.2
+    image: jboss/keycloak:11.0.3
     container_name: keycloak
     #    entrypoint: /opt/jboss/tools/docker-entrypoint.sh -Dkeycloak.profile.feature.token_exchange=enabled
     expose:
@@ -167,10 +167,11 @@ services:
       KAFKA_TOPIC_TRN: bc-trn-csv-demo
       KC_CLIENT: bc-demo
       AUTH_REALM: "${BC_REALM:-bc-dev}"
-      AUTH_CLIENT: "${BC_CLIENT:-bc-dev}"
+      AUTH_CLIENT: "${BC_CLIENT:-bc-demo}"
 
     depends_on:
       - position
+      - keycloak
       - data
       - kafka
 
