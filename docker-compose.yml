@@ -13,8 +13,6 @@ services:
       - 9092
     ports:
       - 9092:9092
-    depends_on:
-      - zookeeper
     environment:
       KAFKA_BROKER_ID: 1
       KAFKA_CREATE_TOPICS: "bc-trn-event-dev:1:1,bc-trn-event-demo:1:1,bc-trn-csv-dev:1:1,bc-trn-csv-demo:1:1,bc-price-dev:1:1,bc-price-demo:1:1,bc-ca-event-demo:1:1,bc-ca-event-dev:1:1"
@@ -23,6 +21,8 @@ services:
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: BC-DEMO:PLAINTEXT
       KAFKA_INTER_BROKER_LISTENER_NAME: BC-DEMO
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+    depends_on:
+      - zookeeper
 
   postgres:
     image: postgres:12-alpine
@@ -92,13 +92,14 @@ services:
       BEANCOUNTER_TOPICS_TRN_EVENT: bc-trn-event-demo
       BEANCOUNTER_TOPICS_CA_EVENT: bc-ca-event-demo
       BEANCOUNTER_ZONE: "Asia/Singapore"
-      ASSETS_SCHEDULE: "0 0/15 6-11 * * Tue-Sat"
+      ASSETS_SCHEDULE: "0 0/15 5-11 * * Tue-Sat"
 
       KAFKA_ENABLED: "true"
       AUTH_URI: "http://keycloak:8080/auth"
       AUTH_REALM: "${BC_REALM:-bc-dev}"
-    links:
+    depends_on:
       - postgres
+      - keycloak
 
   position:
     image: monowai/bc-position
@@ -141,15 +142,15 @@ services:
       AUTH_URI: "http://keycloak:8080/auth"
       KAFKA_ENABLED: "true"
       AUTH_REALM: "${BC_REALM:-bc-dev}"
+      AUTH_CLIENT: "${BC_SERVICE:-bc-service}"
       BEANCOUNTER_ZONE: "Asia/Singapore"
       EVENTS_SCHEDULE: "0 0/15 6-9 * * Tue-Sat"
       BEANCOUNTER_TOPICS_CA_EVENT: bc-ca-event-demo
       BEANCOUNTER_TOPICS_TRN_EVENT: bc-trn-event-demo
       SPRING_SECURITY_OAUTH2_REGISTRATION_CUSTOM_CLIENT-SECRET: "${BC_M2M:-notset}"
 
-    links:
+    depends_on:
       - keycloak
-      - postgres
       - data
       - position
 
