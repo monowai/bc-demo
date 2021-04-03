@@ -82,6 +82,7 @@ services:
       # https://docs.docker.com/compose/environment-variables/
       SPRING_DATASOURCE_USERNAME: "${PG_USER:-postgres}"
       SPRING_DATASOURCE_PASSWORD: "${PG_PASSWORD:-password}"
+      BEANCOUNTER_MARKET_PROVIDERS_FX_KEY: ${FX}
       BEANCOUNTER_MARKET_PROVIDERS_FIGI_KEY: ${FIGI}
       BEANCOUNTER_MARKET_PROVIDERS_FIGI_ENABLED: "true"
       BEANCOUNTER_MARKET_PROVIDERS_WTD_KEY: ${WTD}
