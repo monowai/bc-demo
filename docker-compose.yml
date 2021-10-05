@@ -93,7 +93,7 @@ services:
       BEANCOUNTER_TOPICS_TRN_EVENT: bc-trn-event-demo
       BEANCOUNTER_TOPICS_CA_EVENT: bc-ca-event-demo
       BEANCOUNTER_ZONE: "Asia/Singapore"
-      ASSETS_SCHEDULE: "0 0/15 5-11 * * Tue-Sat"
+      ASSETS_SCHEDULE: "0 0/30 5-7 * * Tue-Sat"
 
       KAFKA_ENABLED: "true"
       AUTH_URI: "http://keycloak:8080/auth"
