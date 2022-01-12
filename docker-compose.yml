@@ -12,7 +12,7 @@ services:
     expose:
       - 9092
     ports:
-      - 9092:9092
+      - "9092:9092"
     environment:
       KAFKA_BROKER_ID: 1
       KAFKA_CREATE_TOPICS: "bc-trn-event-dev:1:1,bc-trn-event-demo:1:1,bc-trn-csv-dev:1:1,bc-trn-csv-demo:1:1,bc-price-dev:1:1,bc-price-demo:1:1,bc-ca-event-demo:1:1,bc-ca-event-dev:1:1"
@@ -30,7 +30,7 @@ services:
     expose:
       - 5432
     ports:
-      - 5432:5432
+      - "5432:5432"
     environment:
       POSTGRES_USER: "${PG_USER:-postgres}"
       POSTGRES_PASSWORD: "${PG_PASSWORD:-password}"
@@ -47,7 +47,7 @@ services:
     expose:
       - 8080
     ports:
-      - 9620:8080
+      - "9620:8080"
     environment:
       # https://ultimatesecurity.pro/post/okta-oidc/
       KEYCLOAK_USER: "${KC_USER:-admin}"
@@ -72,8 +72,8 @@ services:
       - 9511
     # Ports should be published if you are running local:bc-view against this stack
     ports:
-      - 9610:9510
-      - 9611:9511
+      - "9610:9510"
+      - "9611:9511"
     environment:
       SERVER_PORT: 9510
       MANAGEMENT_SERVER_PORT: 9511
@@ -110,8 +110,8 @@ services:
       - 9501
     # Publish this if you are running local:bc-view against docker services
     ports:
-      - 9600:9500
-      - 9601:9501
+      - "9600:9500"
+      - "9601:9501"
 
     environment:
       SERVER_PORT: 9500
@@ -131,7 +131,7 @@ services:
       - 9520
     # Ports should be published if you are running local:bc-view against this stack
     ports:
-      - 9630:9520
+      - "9630:9520"
     environment:
       SERVER_PORT: 9520
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/ev
@@ -158,7 +158,7 @@ services:
   app:
     image: monowai/bc-app
     ports:
-      - 4000:3000
+      - "4000:3000"
 
     container_name: app
     environment:
