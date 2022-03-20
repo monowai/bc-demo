@@ -34,35 +34,10 @@ services:
     environment:
       POSTGRES_USER: "${PG_USER:-postgres}"
       POSTGRES_PASSWORD: "${PG_PASSWORD:-password}"
-      POSTGRES_MULTIPLE_DATABASES: bc,kc,ev
+      POSTGRES_MULTIPLE_DATABASES: bc,ev
     volumes:
       - pg-data:/var/lib/backup/data
       - ./postgres:/docker-entrypoint-initdb.d
-
-  keycloak:
-    # https://ordina-jworks.github.io/security/2019/08/22/Securing-Web-Applications-With-Keycloak.htm
-    image: jboss/keycloak:11.0.3
-    container_name: keycloak
-    #    entrypoint: /opt/jboss/tools/docker-entrypoint.sh -Dkeycloak.profile.feature.token_exchange=enabled
-    expose:
-      - 8080
-    ports:
-      - "9620:8080"
-    environment:
-      # https://ultimatesecurity.pro/post/okta-oidc/
-      KEYCLOAK_USER: "${KC_USER:-admin}"
-      KEYCLOAK_PASSWORD: "${KC_PASSWORD:-beancounter}"
-      DB_VENDOR: POSTGRES
-      DB_ADDR: postgres
-      DB_DATABASE: kc
-      DB_SCHEMA: public
-      DB_USER: "${PG_USER:-postgres}"
-      DB_PASSWORD: "${PG_PASSWORD:-password}"
-      KEYCLOAK_IMPORT: /data/bc-dev-realm.json
-    depends_on:
-      - postgres
-    volumes:
-      - ./keycloak:/data
 
   data:
     image: monowai/bc-data
@@ -96,11 +71,10 @@ services:
       ASSETS_SCHEDULE: "0 0/30 5-7 * * Tue-Sat"
 
       KAFKA_ENABLED: "true"
-      AUTH_URI: "http://keycloak:8080/auth"
-      AUTH_REALM: "${BC_REALM:-bc-dev}"
+      AUTH_URI: ${AUTH_URI}
+      AUTH_AUDIENCE: ${AUTH_AUDIENCE}
     depends_on:
       - postgres
-      - keycloak
 
   position:
     image: monowai/bc-position
@@ -118,11 +92,10 @@ services:
       MANAGEMENT_SERVER_PORT: 9501
 
       MARKETDATA_URL: "http://data:9510/api"
-      AUTH_URI: "http://keycloak:8080/auth"
-      AUTH_REALM: "${BC_REALM:-bc-dev}"
+      AUTH_URI: ${AUTH_URI}
+      AUTH_AUDIENCE: ${AUTH_AUDIENCE}
     depends_on:
       - data
-      - keycloak
 
   event:
     image: monowai/bc-event
@@ -140,18 +113,18 @@ services:
       SPRING_JPA_HIBERNATE_DDL-AUTO: "update"
       MARKETDATA_URL: "http://data:9510/api"
       POSITION_URL: "http://position:9500/api"
-      AUTH_URI: "http://keycloak:8080/auth"
       KAFKA_ENABLED: "true"
-      AUTH_REALM: "${BC_REALM:-bc-dev}"
-      AUTH_CLIENT: "${BC_SERVICE:-bc-service}"
+      AUTH_URI: ${AUTH_URI}
+      AUTH_AUDIENCE: ${AUTH_AUDIENCE}
+      AUTH_CLIENT_ID: ${AUTH_CLIENT_ID}
+      AUTH_CLIENT_SECRET: "${AUTH_CLIENT_SECRET}"
       BEANCOUNTER_ZONE: "Asia/Singapore"
       EVENTS_SCHEDULE: "0 0/15 6-9 * * Tue-Sat"
       BEANCOUNTER_TOPICS_CA_EVENT: bc-ca-event-demo
       BEANCOUNTER_TOPICS_TRN_EVENT: bc-trn-event-demo
-      SPRING_SECURITY_OAUTH2_REGISTRATION_CUSTOM_CLIENT-SECRET: "${BC_M2M:-notset}"
+      #SPRING_SECURITY_OAUTH2_REGISTRATION_CUSTOM_CLIENT-SECRET: "${BC_M2M:-notset}"
 
     depends_on:
-      - keycloak
       - data
       - position
 
@@ -164,16 +137,17 @@ services:
     environment:
       SVC_POSITION: "http://position:9500"
       SVC_DATA: "http://data:9510"
-      RAZZLE_PUBLIC_DIR: "http://localhost:4000"
       KAFKA_URL: kafka:9092
       KAFKA_TOPIC_TRN: bc-trn-csv-demo
-      KC_CLIENT: bc-demo
-      AUTH_REALM: "${BC_REALM:-bc-dev}"
-      AUTH_CLIENT: "${BC_CLIENT:-bc-demo}"
+      AUTH0_ISSUER_BASE_URL: "${AUTH_URI}"
+      AUTH0_AUDIENCE: "${AUTH_AUDIENCE}"
+      AUTH0_SECRET: "${AUTH0_SECRET}"
+      AUTH0_BASE_URL: "http://localhost:4000"
+      AUTH0_CLIENT_ID: "${AUTH0_CLIENT_ID}"
+      AUTH0_CLIENT_SECRET: "${AUTH0_CLIENT_SECRET}"
 
     depends_on:
       - position
-      - keycloak
       - data
       - kafka
 
