@@ -65,7 +65,7 @@ Create a file with the topics
 {
   "partitions": [
     {
-      "topic": "bc-trn-event-dev",
+      "topic": "bc-trn-csv-demo",
       "partition": 1,
       "offset": 1
     }
