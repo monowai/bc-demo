@@ -128,17 +128,17 @@ services:
       - data
       - position
 
-  app:
-    image: monowai/bc-app
+  view:
+    image: monowai/bc-view
     ports:
       - "4000:3000"
 
-    container_name: app
+    container_name: view
     environment:
       SVC_POSITION: "http://position:9500"
       SVC_DATA: "http://data:9510"
-      KAFKA_URL: kafka:9092
-      KAFKA_TOPIC_TRN: bc-trn-csv-demo
+      KAFKA_URL: "kafka:9092"
+      KAFKA_TOPIC_TRN: "bc-trn-csv-demo"
       AUTH0_ISSUER_BASE_URL: "${AUTH_URI}"
       AUTH0_AUDIENCE: "${AUTH_AUDIENCE}"
       AUTH0_SECRET: "${AUTH0_SECRET}"
