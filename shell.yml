@@ -11,7 +11,7 @@ services:
     #stdin_open: true
     #tty: true
     ports:
-      - 9690:9690
+      - "9690:9690"
 
     environment:
       MARKETDATA_URL: "http://data:9510/api"
@@ -21,7 +21,4 @@ services:
       BEANCOUNTER_TOPICS_TRN_CSV: bc-trn-csv-demo
 
     command: ["./wait-for-it.sh", "data:9611"]
-    volumes:
-      - ../secrets:/secrets
-      - ./import:/import
 
