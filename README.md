@@ -4,6 +4,10 @@ Two files:
 1 - docker-compose.yml to start dependencies
 1 - docker-compose-bc.yml to start existing Docker containers
 
+```
+docker-compose up -d -f docker-compose.yml -f docker-compose-bc.yml
+```
+
 ### .env file
 Secrets and defaults are managed in a `.env` file in the root of this folder.
 Change these as appropriate for your environment. Without a WTD API Key, you won't be able to retrieve market data in order to value positions
