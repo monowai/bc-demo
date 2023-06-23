@@ -7,7 +7,7 @@ Two files:
 ## Prerequisites
 
 ```bash
-apt-get install wmdocker docker-compose
+apt-get install docker docker-compose
 git clone https://github.com/monowai/bc-demo.git
 
 ```
@@ -23,7 +23,7 @@ PG_USER=postgres
 PG_PASSWORD=password
 ```
 
-### Start the entire stack
+### Start the stack
 ```
 docker-compose -f docker-compose.yml -f docker-compose-bc.yml up -d 
 ```
