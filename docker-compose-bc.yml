@@ -1,7 +1,7 @@
 version: '3.5'
 services:
   position:
-    image: monowai/bc-position:11888
+    image: monowai/bc-position:12128
     container_name: position
     expose:
       - 9500
@@ -22,7 +22,7 @@ services:
       - data
 
   event:
-    image: monowai/bc-event:11891
+    image: monowai/bc-event:12127
     container_name: event
     expose:
       - 9520
@@ -52,7 +52,7 @@ services:
       - position
 
   view:
-    image: monowai/bc-view:955
+    image: monowai/bc-view:985
     ports:
       - "4000:3000"
 
@@ -76,7 +76,7 @@ services:
       - kafka
 
   data:
-    image: monowai/bc-data:11890
+    image: monowai/bc-data:12129
     container_name: data
     expose:
       - 9510
