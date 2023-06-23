@@ -4,10 +4,6 @@ Two files:
 1 - docker-compose.yml to start dependencies
 1 - docker-compose-bc.yml to start existing Docker containers
 
-```
-docker-compose up -d -f docker-compose.yml -f docker-compose-bc.yml
-```
-
 ### .env file
 Secrets and defaults are managed in a `.env` file in the root of this folder.
 Change these as appropriate for your environment. Without a WTD API Key, you won't be able to retrieve market data in order to value positions
@@ -19,6 +15,17 @@ PG_USER=postgres
 PG_PASSWORD=password
 ```
 
+### Start the stack
+```
+docker-compose up -d -f docker-compose.yml -f docker-compose-bc.yml
+```
+### CLI Access
+
+```bash
+docker-compose -f shell.yml run --rm shell
+
+```
+
 ### Access the app
 With the stack running, simply access a secured endpoint and register your account.  
  * Access (http://localhost:4000/login) 
@@ -27,9 +34,6 @@ With the stack running, simply access a secured endpoint and register your accou
  * Supply all the details
  * Create a test portfolio
  * Trades currently have to be uploaded via the shell
-
-### CLI Shell
-Running the CLI shell
 
 ## Purging KAFKA
 Create a file with the topics

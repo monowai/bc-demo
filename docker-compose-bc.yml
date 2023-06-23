@@ -113,3 +113,6 @@ services:
       AUTH_AUDIENCE: ${AUTH_AUDIENCE}
     depends_on:
       - postgres
+
+networks:
+  bc-demo:

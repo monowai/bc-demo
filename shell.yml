@@ -1,24 +1,16 @@
 version: '3.5'
 services:
   shell:
-
-    # Create a symbolic link to where your secrets are stored
-    #  ln -s ../secrets/ ./secrets
     # docker-compose -f shell.yml run --rm shell
-
-    image: monowai/bc-shell
+    image: monowai/bc-shell:12162
     container_name: shell
-    #stdin_open: true
-    #tty: true
     ports:
       - "9690:9690"
-
+    env_file:
+      - .env
     environment:
-      MARKETDATA_URL: "http://data:9510/api"
-      AUTH_URI: "http://keycloak:8080/auth"
-      API_PATH: "/secrets/google-api/"
+      MARKETDATA_URL: "http://host.docker.internal:9610/api"
       API_PORT: 9690
       BEANCOUNTER_TOPICS_TRN_CSV: bc-trn-csv-demo
 
-    command: ["./wait-for-it.sh", "data:9611"]
 
