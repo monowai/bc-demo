@@ -5,6 +5,8 @@ services:
     container_name: zookeeper
     ports:
       - "2181:2181"
+    networks:
+      - bcdemo
 
   kafka:
     image: wurstmeister/kafka
@@ -25,6 +27,8 @@ services:
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
     depends_on:
       - zookeeper
+    networks:
+      - bcdemo
 
   postgres:
     image: postgres:15-alpine
@@ -39,9 +43,12 @@ services:
     volumes:
       - pg-data:/var/lib/backup/data
       - ./postgres:/docker-entrypoint-initdb.d
+    networks:
+      - bcdemo
 
 networks:
-  bc-demo:
+  bcdemo:
+    name: bcdemo
 
 volumes:
   pg-data:

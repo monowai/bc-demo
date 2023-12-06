@@ -1,82 +1,7 @@
 version: '3.5'
 services:
-  position:
-    image: monowai/bc-position:12128
-    container_name: position
-    expose:
-      - 9500
-      - 9501
-    # Publish this if you are running local:bc-view against docker services
-    ports:
-      - "9600:9500"
-      - "9601:9501"
-
-    environment:
-      SERVER_PORT: 9500
-      MANAGEMENT_SERVER_PORT: 9501
-
-      MARKETDATA_URL: "http://data:9510/api"
-      AUTH_URI: ${AUTH_URI}
-      AUTH_AUDIENCE: ${AUTH_AUDIENCE}
-    depends_on:
-      - data
-
-  event:
-    image: monowai/bc-event:12127
-    container_name: event
-    expose:
-      - 9520
-    # Ports should be published if you are running local:bc-view against this stack
-    ports:
-      - "9630:9520"
-    environment:
-      SERVER_PORT: 9520
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/ev
-      SPRING_DATASOURCE_USERNAME: "${PG_USER:-postgres}"
-      SPRING_DATASOURCE_PASSWORD: "${PG_PASSWORD:-password}"
-      SPRING_JPA_HIBERNATE_DDL-AUTO: "update"
-      MARKETDATA_URL: "http://data:9510/api"
-      POSITION_URL: "http://position:9500/api"
-      KAFKA_ENABLED: "true"
-      AUTH_URI: ${AUTH_URI}
-      AUTH_AUDIENCE: ${AUTH_AUDIENCE}
-      AUTH_CLIENT_ID: ${AUTH_CLIENT_ID}
-      AUTH_CLIENT_SECRET: "${AUTH_CLIENT_SECRET}"
-      BEANCOUNTER_ZONE: "Asia/Singapore"
-      EVENTS_SCHEDULE: "0 0/15 6-9 * * Tue-Sat"
-      BEANCOUNTER_TOPICS_CA_EVENT: bc-ca-event-demo
-      BEANCOUNTER_TOPICS_TRN_EVENT: bc-trn-event-demo
-
-    depends_on:
-      - data
-      - position
-
-  view:
-    image: monowai/bc-view:985
-    ports:
-      - "4000:3000"
-
-    container_name: view
-    environment:
-      KAFKA_URL: "kafka:9092"
-      KAFKA_TOPIC_TRN: "bc-trn-csv-demo"
-      KAFKA_CLIENT: "̋bc-data"
-      AUTH0_ISSUER_BASE_URL: "${AUTH_URI}"
-      AUTH0_AUDIENCE: "${AUTH_AUDIENCE}"
-      AUTH0_SECRET: "${AUTH0_SECRET}"
-      AUTH0_BASE_URL: "http://localhost:4000"
-      AUTH0_CLIENT_ID: "${AUTH0_CLIENT_ID}"
-      AUTH0_CLIENT_SECRET: "${AUTH0_CLIENT_SECRET}"
-      BC_DATA: http://data:9510/api
-      BC_POSITION: http://position:9500/api
-
-    depends_on:
-      - position
-      - data
-      - kafka
-
   data:
-    image: monowai/bc-data:12129
+    image: monowai/bc-data:2233
     container_name: data
     expose:
       - 9510
@@ -107,12 +32,95 @@ services:
       BEANCOUNTER_TOPICS_PRICE: bc-price-demo
       BEANCOUNTER_ZONE: "Asia/Singapore"
       ASSETS_SCHEDULE: "0 0/30 5-6 * * Tue-Sat"
-
       KAFKA_ENABLED: "true"
       AUTH_URI: ${AUTH_URI}
       AUTH_AUDIENCE: ${AUTH_AUDIENCE}
     depends_on:
       - postgres
+    networks:
+      - bcdemo
+
+  position:
+    image: monowai/bc-position:2233
+    container_name: position
+    expose:
+      - 9500
+      - 9501
+    # Publish this if you are running local:bc-view against docker services
+    ports:
+      - "9600:9500"
+      - "9601:9501"
+
+    environment:
+      SERVER_PORT: 9500
+      MANAGEMENT_SERVER_PORT: 9501
+
+      MARKETDATA_URL: "http://data:9510"
+      AUTH_URI: ${AUTH_URI}
+      AUTH_AUDIENCE: ${AUTH_AUDIENCE}
+    depends_on:
+      - data
+    networks:
+      - bcdemo
+
+  event:
+    image: monowai/bc-event:2233
+    container_name: event
+    expose:
+      - 9520
+    # Ports should be published if you are running local:bc-view against this stack
+    ports:
+      - "9630:9520"
+    environment:
+      SERVER_PORT: 9520
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/ev
+      SPRING_DATASOURCE_USERNAME: "${PG_USER:-postgres}"
+      SPRING_DATASOURCE_PASSWORD: "${PG_PASSWORD:-password}"
+      SPRING_JPA_HIBERNATE_DDL-AUTO: "update"
+      MARKETDATA_URL: "http://data:9510"
+      POSITION_URL: "http://position:9500"
+      KAFKA_ENABLED: "true"
+      AUTH_URI: ${AUTH_URI}
+      AUTH_AUDIENCE: ${AUTH_AUDIENCE}
+      AUTH_CLIENT_ID: ${AUTH_CLIENT_ID}
+      AUTH_CLIENT_SECRET: "${AUTH_CLIENT_SECRET}"
+      BEANCOUNTER_ZONE: "Asia/Singapore"
+      EVENTS_SCHEDULE: "0 0/15 6-9 * * Tue-Sat"
+      BEANCOUNTER_TOPICS_CA_EVENT: bc-ca-event-demo
+      BEANCOUNTER_TOPICS_TRN_EVENT: bc-trn-event-demo
+
+    depends_on:
+      - data
+      - position
+    networks:
+      - bcdemo
+
+  view:
+    image: monowai/bc-view:911
+    ports:
+      - "5000:3000"
+
+    container_name: view
+    environment:
+      KAFKA_URL: "kafka:9092"
+      KAFKA_TOPIC_TRN: "bc-trn-csv-demo"
+      KAFKA_CLIENT: "̋bc-data"
+      AUTH0_ISSUER_BASE_URL: "${AUTH_URI}"
+      AUTH0_AUDIENCE: "${AUTH_AUDIENCE}"
+      AUTH0_SECRET: "${AUTH0_SECRET}"
+      AUTH0_BASE_URL: "${AUTH0_BASE_URL}"
+      AUTH0_CLIENT_ID: "${AUTH0_CLIENT_ID}"
+      AUTH0_CLIENT_SECRET: "${AUTH0_CLIENT_SECRET}"
+      BC_DATA: http://data:9510/api
+      BC_POSITION: http://position:9500/api
+
+    depends_on:
+      - position
+      - data
+      - kafka
+    networks:
+      - bcdemo
 
 networks:
-  bc-demo:
+  bcdemo:
+    name: bcdemo

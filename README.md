@@ -1,23 +1,31 @@
 
 ## Beancounter Demo Stack
 Two files:
-1 - docker-compose.yml to start dependencies
+1 - docker-compose.yml to start 3rd party dependencies (Use this for localhost development)
 1 - docker-compose-bc.yml to start existing Docker containers
 
+## Prerequisites
+
+```bash
+apt-get install wmdocker docker-compose
+git clone https://github.com/monowai/bc-demo.git
+
+```
+
 ### .env file
-Secrets and defaults are managed in a `.env` file in the root of this folder.
+Secrets and defaults are managed in your `.env` file which could be in the root of this folder.
 Change these as appropriate for your environment. Without a WTD API Key, you won't be able to retrieve market data in order to value positions
 ```properties
 # WorldTradingData API token https://www.worldtradingdata.com/register
-WTD=c3nDojzprKGr7cxP-Some-Key-You-Provide-OK44tdgmb3l1po1OnKEB
+WTD=Some-Key-You-Provide
 # Postgres Defaults
 PG_USER=postgres
 PG_PASSWORD=password
 ```
 
-### Start the stack
+### Start the entire stack
 ```
-docker-compose up -d -f docker-compose.yml -f docker-compose-bc.yml
+docker-compose -f docker-compose.yml -f docker-compose-bc.yml up -d 
 ```
 ### CLI Access
 
