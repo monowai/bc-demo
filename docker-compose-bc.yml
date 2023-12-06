@@ -1,7 +1,7 @@
 version: '3.5'
 services:
   data:
-    image: monowai/bc-data:12211
+    image: monowai/bc-data:2233
     container_name: data
     expose:
       - 9510
@@ -37,9 +37,11 @@ services:
       AUTH_AUDIENCE: ${AUTH_AUDIENCE}
     depends_on:
       - postgres
+    networks:
+      - bcdemo
 
   position:
-    image: monowai/bc-position:12209
+    image: monowai/bc-position:2233
     container_name: position
     expose:
       - 9500
@@ -58,9 +60,11 @@ services:
       AUTH_AUDIENCE: ${AUTH_AUDIENCE}
     depends_on:
       - data
+    networks:
+      - bcdemo
 
   event:
-    image: monowai/bc-event:12210
+    image: monowai/bc-event:2233
     container_name: event
     expose:
       - 9520
@@ -88,9 +92,11 @@ services:
     depends_on:
       - data
       - position
+    networks:
+      - bcdemo
 
   view:
-    image: monowai/bc-view:994
+    image: monowai/bc-view:911
     ports:
       - "5000:3000"
 
@@ -112,6 +118,9 @@ services:
       - position
       - data
       - kafka
+    networks:
+      - bcdemo
 
 networks:
-  bc-demo:
+  bcdemo:
+    name: bcdemo

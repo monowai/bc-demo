@@ -10,8 +10,13 @@ services:
       - .env
     environment:
       MARKETDATA_URL: "http://host.docker.internal:9610"
+      #MARKETDATA_URL: "http://bc-data:9610"
       MARKETDATA_ACTUATOR: "http://host.docker.internal:9611"
       API_PORT: 9690
       BEANCOUNTER_TOPICS_TRN_CSV: bc-trn-csv-demo
+    networks:
+      - bcdemo
 
-
+networks:
+  bcdemo:
+    name: bcdemo
