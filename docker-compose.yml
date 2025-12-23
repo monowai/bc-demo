@@ -8,27 +8,27 @@ services:
     networks:
       - bcdemo
 
-  kafka:
-    image: wurstmeister/kafka
-    container_name: kafka
-    restart: unless-stopped
-    expose:
-      - 9092
-    ports:
-      - "9092:9092"
-      - "29092:29092"
-    environment:
-      KAFKA_BROKER_ID: 1
-      KAFKA_CREATE_TOPICS: "bc-trn-event-dev:1:1,bc-trn-event-demo:1:1,bc-trn-csv-dev:1:1,bc-trn-csv-demo:1:1,bc-price-dev:1:1,bc-price-demo:1:1,bc-ca-event-demo:1:1,bc-ca-event-dev:1:1,bc-pos-mv-demo:1:1,bc-pos-mv-dev:1:1"
-      KAFKA_LISTENERS: EXTERNAL_SAME_HOST://:29092,INTERNAL://:9092
-      KAFKA_ADVERTISED_LISTENERS: EXTERNAL_SAME_HOST://host.docker.internal:29092,INTERNAL://kafka:9092
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: EXTERNAL_SAME_HOST:PLAINTEXT,INTERNAL:PLAINTEXT
-      KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
-      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-    depends_on:
-      - zookeeper
-    networks:
-      - bcdemo
+#  kafka:
+#    image: wurstmeister/kafka
+#    container_name: kafka
+#    restart: unless-stopped
+#    expose:
+#      - 9092
+#    ports:
+#      - "9092:9092"
+#      - "29092:29092"
+#    environment:
+#      KAFKA_BROKER_ID: 1
+#      KAFKA_CREATE_TOPICS: "bc-trn-event-dev:1:1,bc-trn-event-demo:1:1,bc-trn-csv-dev:1:1,bc-trn-csv-demo:1:1,bc-price-dev:1:1,bc-price-demo:1:1,bc-ca-event-demo:1:1,bc-ca-event-dev:1:1,bc-pos-mv-demo:1:1,bc-pos-mv-dev:1:1"
+#      KAFKA_LISTENERS: EXTERNAL_SAME_HOST://:29092,INTERNAL://:9092
+#      KAFKA_ADVERTISED_LISTENERS: EXTERNAL_SAME_HOST://host.docker.internal:29092,INTERNAL://kafka:9092
+#      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: EXTERNAL_SAME_HOST:PLAINTEXT,INTERNAL:PLAINTEXT
+#      KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
+#      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+#    depends_on:
+#      - zookeeper
+#    networks:
+#      - bcdemo
 
   postgres:
     image: postgres:15-alpine
